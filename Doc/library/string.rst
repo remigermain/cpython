@@ -275,14 +275,15 @@ value to a string before calling :meth:`~object.__format__`, the normal formatti
 is bypassed.
 
 Three conversion flags are currently supported: ``'!s'`` which calls :func:`str`
-on the value, ``'!r'`` which calls :func:`repr` and ``'!a'`` which calls
-:func:`ascii`.
+on the value, ``'!r'`` which calls :func:`repr`, ``'!a'`` which calls
+:func:`ascii` and ``'!t'`` which calls :func:`type`.
 
 Some examples::
 
    "Harold's a clever {0!s}"        # Calls str() on the argument first
    "Bring out the holy {name!r}"    # Calls repr() on the argument first
    "More {!a}"                      # Calls ascii() on the argument first
+   "More {'hey'!r}"                 # Calls type() on the argument first
 
 The *format_spec* field contains a specification of how the value should be
 presented, including such details as field width, alignment, padding, decimal

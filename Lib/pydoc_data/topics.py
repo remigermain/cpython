@@ -5251,8 +5251,8 @@ definition of formatting.  By converting the value to a string before
 calling "__format__()", the normal formatting logic is bypassed.
 
 Three conversion flags are currently supported: "'!s'" which calls
-"str()" on the value, "'!r'" which calls "repr()" and "'!a'" which
-calls "ascii()".
+"str()" on the value, "'!r'" which calls "repr()", "'!a'" which
+calls "ascii()", "'!t'" which calls "type()".
 
 Some examples:
 

@@ -139,8 +139,8 @@ number of characters wide.  This is useful for making columns line up. ::
    Dcab       ==>       7678
 
 Other modifiers can be used to convert the value before it is formatted.
-``'!a'`` applies :func:`ascii`, ``'!s'`` applies :func:`str`, and ``'!r'``
-applies :func:`repr`::
+``'!a'`` applies :func:`ascii`, ``'!s'`` applies :func:`str`, ``'!r'``
+applies :func:`repr`:: and  ``'!t'`` applies :func:`type`
 
    >>> animals = 'eels'
    >>> print(f'My hovercraft is full of {animals}.')

@@ -15171,6 +15171,7 @@ unicode_format_arg_format(struct unicode_formatter_t *ctx,
     case 's':
     case 'r':
     case 'a':
+    case 't':
         if (PyLong_CheckExact(v) && arg->width == -1 && arg->prec == -1) {
             /* Fast path */
             if (_PyLong_FormatWriter(writer, v, 10, arg->flags & F_ALT) == -1)
@@ -15186,6 +15187,8 @@ unicode_format_arg_format(struct unicode_formatter_t *ctx,
                 *p_str = PyObject_Str(v);
             else if (arg->ch == 'r')
                 *p_str = PyObject_Repr(v);
+            else if (arg->ch == 't')
+                *p_str = PyObject_Type(v);
             else
                 *p_str = PyObject_ASCII(v);
         }

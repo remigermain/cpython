@@ -991,7 +991,7 @@ declared.
 
 If a conversion is specified, the result of evaluating the expression
 is converted before formatting.  Conversion ``'!s'`` calls :func:`str` on
-the result, ``'!r'`` calls :func:`repr`, and ``'!a'`` calls :func:`ascii`.
+the result, ``'!r'`` calls :func:`repr`, ``'!a'`` calls :func:`ascii` and ``'!t'`` calls :func:`type`
 
 The result is then formatted using the :func:`format` protocol.  The
 format specifier is passed to the :meth:`~object.__format__` method of the
