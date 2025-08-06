@@ -553,7 +553,7 @@ const conversion_func _PyEval_ConversionFuncs[5] = {
     [FVC_STR] = PyObject_Str,
     [FVC_REPR] = PyObject_Repr,
     [FVC_ASCII] = PyObject_ASCII,
-    [FVC_TYPE] = PyObject_Type
+    [FVC_TYPE] = PyObject_FormatType
 };
 
 const _Py_SpecialMethod _Py_SpecialMethods[] = {

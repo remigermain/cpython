@@ -92,8 +92,8 @@ class ModuleTest(unittest.TestCase):
         self.assertEqual(fmt.format("{0!a}",  chr(256)), "'\\u0100'")
 
         # test types
-        self.assertEqual(fmt.format("{0!t}", 42), "<class 'int'>")
-        self.assertEqual(fmt.format("{arg!t}", arg="test"), "<class 'str'>")
+        self.assertEqual(fmt.format("{0!t}", 42), "int")
+        self.assertEqual(fmt.format("{arg!t}", arg="test"), "str")
 
     def test_name_lookup(self):
         fmt = string.Formatter()

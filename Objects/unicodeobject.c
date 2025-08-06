@@ -3533,6 +3533,7 @@ PyUnicode_FromObject(PyObject *obj)
     return NULL;
 }
 
+
 PyObject *
 PyUnicode_FromEncodedObject(PyObject *obj,
                             const char *encoding,
@@ -3584,6 +3585,16 @@ PyUnicode_FromEncodedObject(PyObject *obj,
     v = PyUnicode_Decode((char*) buffer.buf, buffer.len, encoding, errors);
     PyBuffer_Release(&buffer);
     return v;
+}
+
+PyObject *
+PyObject_FormatType(PyObject *obj) {
+    PyTypeObject *type = (PyTypeObject *)Py_NewRef(Py_TYPE(obj));
+
+    PyObject *type_name;
+    type_name = PyType_GetFullyQualifiedName(type);
+    Py_DECREF(type);
+    return type_name;
 }
 
 /* Normalize an encoding name: similar to encodings.normalize_encoding(), but
@@ -15188,7 +15199,7 @@ unicode_format_arg_format(struct unicode_formatter_t *ctx,
             else if (arg->ch == 'r')
                 *p_str = PyObject_Repr(v);
             else if (arg->ch == 't')
-                *p_str = PyObject_Type(v);
+                *p_str = PyObject_FormatType(v);
             else
                 *p_str = PyObject_ASCII(v);
         }

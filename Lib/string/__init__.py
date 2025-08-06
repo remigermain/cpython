@@ -285,7 +285,7 @@ class Formatter:
         elif conversion == 'a':
             return ascii(value)
         elif conversion == 't':
-            return type(value)
+            return type(value).__qualname__
         raise ValueError("Unknown conversion specifier {0!s}".format(conversion))
 
     def parse(self, format_string):
