@@ -5180,7 +5180,7 @@
             _PyStackRef result;
             value = stack_pointer[-1];
             conversion_func conv_fn;
-            assert(oparg >= FVC_STR && oparg <= FVC_TYPE);
+            assert(oparg >= FVC_MIN_FORMAT_VALUE && oparg <= FVC_MAX_FORMAT_VALUE);
             conv_fn = _PyEval_ConversionFuncs[oparg];
             _PyFrame_SetStackPointer(frame, stack_pointer);
             PyObject *result_o = conv_fn(PyStackRef_AsPyObjectBorrow(value));

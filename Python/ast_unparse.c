@@ -756,6 +756,15 @@ append_interpolation_conversion(PyUnicodeWriter *writer, int conversion)
     case 't':
         conversion_str = "!t";
         break;
+    case 'T':
+        conversion_str = "!T";
+        break;
+    case 'n':
+        conversion_str = "!n";
+        break;
+    case 'N':
+        conversion_str = "!N";
+        break;
     default:
         PyErr_SetString(PyExc_SystemError,
                         "unknown f-value conversion kind");

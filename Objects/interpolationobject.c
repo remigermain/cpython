@@ -212,8 +212,17 @@ _PyInterpolation_Build(PyObject *value, PyObject *str, int conversion, PyObject 
             case FVC_STR:
                 interpolation->conversion = _Py_LATIN1_CHR('s');
                 break;
-            case FVC_TYPE:
+            case FVC_OBJECT_TYPE:
                 interpolation->conversion = _Py_LATIN1_CHR('t');
+                break;
+            case FVC_OBJECT_TYPE_MODULE:
+                interpolation->conversion = _Py_LATIN1_CHR('T');
+                break;
+            case FVC_TYPE:
+                interpolation->conversion = _Py_LATIN1_CHR('n');
+                break;
+            case FVC_TYPE_MODULE:
+                interpolation->conversion = _Py_LATIN1_CHR('N');
                 break;
             default:
                 PyErr_SetString(PyExc_SystemError,

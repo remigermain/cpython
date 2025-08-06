@@ -284,8 +284,14 @@ class Formatter:
             return repr(value)
         elif conversion == 'a':
             return ascii(value)
-        elif conversion == 't':
+        elif conversion == "t":
             return type(value).__qualname__
+        elif conversion == "T":
+            return type(value).__module__ + ":" + type(value).__qualname__
+        elif conversion == "n":
+            return value.__qualname__
+        elif conversion == "N":
+            return value.__module__ + ":" + value.__qualname__
         raise ValueError("Unknown conversion specifier {0!s}".format(conversion))
 
     def parse(self, format_string):

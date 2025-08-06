@@ -3127,16 +3127,13 @@ unicode_fromformat_arg(_PyUnicodeWriter *writer,
     case 'T':
     {
         PyObject *obj = va_arg(*vargs, PyObject *);
-        PyTypeObject *type = (PyTypeObject *)Py_NewRef(Py_TYPE(obj));
-
         PyObject *type_name;
         if (flags & F_ALT) {
-            type_name = _PyType_GetFullyQualifiedName(type, ':');
+            type_name = PyObject_FormatObjectTypeModule(obj);
         }
         else {
-            type_name = PyType_GetFullyQualifiedName(type);
+            type_name = PyObject_FormatObjectType(obj);
         }
-        Py_DECREF(type);
         if (!type_name) {
             return NULL;
         }
@@ -3155,18 +3152,12 @@ unicode_fromformat_arg(_PyUnicodeWriter *writer,
         PyObject *type_raw = va_arg(*vargs, PyObject *);
         assert(type_raw != NULL);
 
-        if (!PyType_Check(type_raw)) {
-            PyErr_SetString(PyExc_TypeError, "%N argument must be a type");
-            return NULL;
-        }
-        PyTypeObject *type = (PyTypeObject*)type_raw;
-
         PyObject *type_name;
         if (flags & F_ALT) {
-            type_name = _PyType_GetFullyQualifiedName(type, ':');
+            type_name = PyObject_FormatTypeModule(type_raw);
         }
         else {
-            type_name = PyType_GetFullyQualifiedName(type);
+            type_name = PyObject_FormatType(type_raw);
         }
         if (!type_name) {
             return NULL;
@@ -3587,12 +3578,54 @@ PyUnicode_FromEncodedObject(PyObject *obj,
     return v;
 }
 
+/* Function used to convert f-string convertion `!n` or `%n` from PyUnicode_FromFormat
+    "type.__qualname__"
+*/
 PyObject *
-PyObject_FormatType(PyObject *obj) {
+PyObject_FormatType(PyObject *type_raw) {
+    if (!PyType_Check(type_raw)) {
+        PyErr_SetString(PyExc_TypeError, "%n argument must be a type");
+        return NULL;
+    }
+
+    PyTypeObject *type = (PyTypeObject*)type_raw;
+    return PyType_GetFullyQualifiedName(type);
+}
+
+/* Function used to convert f-string convertion `!N` or `%N` from PyUnicode_FromFormat
+    "type.__qualname__:type.__module__"
+*/
+PyObject *
+PyObject_FormatTypeModule(PyObject *type_raw) {
+    if (!PyType_Check(type_raw)) {
+        PyErr_SetString(PyExc_TypeError, "%N argument must be a type");
+        return NULL;
+    }
+
+    PyTypeObject *type = (PyTypeObject*)type_raw;
+    return _PyType_GetFullyQualifiedName(type, ':');
+}
+
+/* Function used to convert f-string convertion `!t` or `%t` from PyUnicode_FromFormat
+    "type(obj).__qualname__"
+*/
+PyObject *
+PyObject_FormatObjectType(PyObject *obj) {
     PyTypeObject *type = (PyTypeObject *)Py_NewRef(Py_TYPE(obj));
 
-    PyObject *type_name;
-    type_name = PyType_GetFullyQualifiedName(type);
+    PyObject *type_name = PyType_GetFullyQualifiedName(type);
+    Py_DECREF(type);
+    return type_name;
+}
+
+/* Function used to convert f-string convertion `!T` or `%T` from PyUnicode_FromFormat
+    "type(obj).__qualname__:type(obj).__module__"
+*/
+PyObject *
+PyObject_FormatObjectTypeModule(PyObject *obj) {
+    PyTypeObject *type = (PyTypeObject *)Py_NewRef(Py_TYPE(obj));
+
+    PyObject *type_name = _PyType_GetFullyQualifiedName(type, ':');
     Py_DECREF(type);
     return type_name;
 }
@@ -15183,6 +15216,9 @@ unicode_format_arg_format(struct unicode_formatter_t *ctx,
     case 'r':
     case 'a':
     case 't':
+    case 'T':
+    case 'n':
+    case 'N':
         if (PyLong_CheckExact(v) && arg->width == -1 && arg->prec == -1) {
             /* Fast path */
             if (_PyLong_FormatWriter(writer, v, 10, arg->flags & F_ALT) == -1)
@@ -15199,7 +15235,13 @@ unicode_format_arg_format(struct unicode_formatter_t *ctx,
             else if (arg->ch == 'r')
                 *p_str = PyObject_Repr(v);
             else if (arg->ch == 't')
+                *p_str = PyObject_FormatObjectType(v);
+            else if (arg->ch == 'T')
+                *p_str = PyObject_FormatObjectTypeModule(v);
+            else if (arg->ch == 'n')
                 *p_str = PyObject_FormatType(v);
+            else if (arg->ch == 'N')
+                *p_str = PyObject_FormatTypeModule(v);
             else
                 *p_str = PyObject_ASCII(v);
         }
